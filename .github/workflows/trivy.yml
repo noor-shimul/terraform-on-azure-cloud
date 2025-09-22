@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Trivy-to run mannually
 
 # Controls when the workflow will run
@@ -10,7 +8,7 @@ on:
   pull_request:
     branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions tab
+  # To run workflow manually from the Actions tab
   workflow_dispatch:
 
 permissions:
@@ -32,16 +30,13 @@ jobs:
           scan-type: 'config'
           output: trivy.txt
 
-    - name: Publish Trivy Output to Summary
-      run: |
-        if [[ -s trivy.txt ]]; then
-          {
-            echo "### Security Output"
-            echo "<details><summary>Click to expand</summary>"
-            echo ""
-            echo '```terraform'
-            cat trivy.txt
-            echo '```'
-            echo "</details>"
-          } >> $GITHUB_STEP_SUMMARY
-        fi
+    - name: Scan Terraform for all type 
+      uses: aquasecurity/trivy-action@0.30.0
+      with: 
+          scan-type: 'fs' 
+          scan-ref: 'terraform/'  # Path to your Terraform files  
+          format: 'sarif'
+          scanners: 'vuln,secret,misconfig'
+          severity: 'CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN' 
+          exit-code: 0
+          output: 'trivy-terraform-results.sarif' 

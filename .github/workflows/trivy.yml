@@ -18,20 +18,19 @@ permissions:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
-    name: Build
+    name: Terraform Code Analysis using Trivy
     runs-on: ubuntu-24.04
     steps:
-    - name: Checkout code
+    - name: Checkout repo
       uses: actions/checkout@v4
 
     - name: Run Trivy vulnerability scanner in IaC mode
       uses: aquasecurity/trivy-action@master
       with:
           scan-type: 'config'
-          output: trivy.txt
 
     - name: Scan Terraform for all type 
-      uses: aquasecurity/trivy-action@0.30.0
+      uses: aquasecurity/trivy-action@master
       with: 
           scan-type: 'fs' 
           scan-ref: '.'  # Path to your Terraform files  
@@ -39,4 +38,3 @@ jobs:
           scanners: 'vuln,secret,misconfig'
           severity: 'CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN' 
           exit-code: 0
-          output: 'trivy-terraform-results.sarif' 

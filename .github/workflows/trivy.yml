@@ -33,5 +33,4 @@ jobs:
         ignore-unfixed: true
         format: 'sarif'
         output: 'trivy-results.sarif'
-        severity: 'CRITICAL, MEDIUM, HIGH, LOW'
         skip-setup-trivy: true

@@ -30,4 +30,3 @@ jobs:
       uses: aquasecurity/trivy-action@master
       with:
           scan-type: 'config'
-          trivy-config: trivy.yaml

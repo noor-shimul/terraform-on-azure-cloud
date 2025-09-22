@@ -30,7 +30,4 @@ jobs:
       uses: aquasecurity/trivy-action@master
       with:
           scan-type: 'config'
-          hide-progress: true
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          exit-code: '1'
+          trivy-config: trivy.yaml

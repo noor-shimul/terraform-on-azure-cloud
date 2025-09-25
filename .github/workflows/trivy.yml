@@ -27,14 +27,28 @@ jobs:
     - name: Run Trivy vulnerability scanner in IaC mode
       uses: aquasecurity/trivy-action@0.33.1
       with:
-          scan-type: 'config'
+          scan-type: 'config' 
+    - name: Run Trivy config scan and save output
+      id: trivy
+      run: |
+          echo "Running Trivy scan..."
+          trivy config > trivy_output.txt
+          
+          echo "trivy_output<<EOF" >> $GITHUB_OUTPUT
+          cat trivy_output.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
-    - name: Scan Terraform for all type 
-      uses: aquasecurity/trivy-action@0.33.1
-      with: 
-          scan-type: 'fs' 
-          scan-ref: '.'  # Path to your Terraform files  
-          format: 'sarif'
-          scanners: 'vuln,secret,misconfig'
-          severity: 'CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN' 
-          exit-code: 0
+    - name: Comment Trivy output on PR
+      uses: peter-evans/create-or-update-comment@v4
+      with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ### 🔍 Trivy IaC Scan Report
+            <details>
+            <summary>Click to expand</summary>
+
+            ```
+            ${{ steps.trivy.outputs.trivy_output }}
+            ```
+
+            </details>

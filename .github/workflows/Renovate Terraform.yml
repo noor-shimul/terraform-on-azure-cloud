@@ -1,6 +1,8 @@
 name: Renovate Terraform
 
 on:
+  push:
+    branches: [ "main" ]
   workflow_dispatch:  # manual trigger
   schedule:
     - cron: '0 3 * * 1'  # every Monday at 3am UTC
